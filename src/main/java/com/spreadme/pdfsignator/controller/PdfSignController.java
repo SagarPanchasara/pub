@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,8 +29,8 @@ public class PdfSignController {
     public ResponseEntity<Resource> sign(@RequestParam("pdf") MultipartFile pdfFile,
                                          @RequestParam("cert") MultipartFile certFile,
                                          @RequestParam("password") String password) throws GeneralSecurityException, IOException {
-        var file = pdfSignService.sign(pdfFile, certFile, password);
-        var resource = new InputStreamResource(new FileInputStream(file));
+        File file = pdfSignService.sign(pdfFile, certFile, password);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .contentLength(file.length())
